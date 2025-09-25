@@ -1,0 +1,69 @@
+import discord
+import random
+from discord.ext import commands
+
+intents = discord.Intents.default()
+intents.message_content = True
+
+bot = commands.Bot(command_prefix="!", intents=intents)
+
+def gen_pass(length):
+    # Todos los caracteres posibles
+    characters = "abcdefghijklmnopqrstuvwxyz0123456789"
+    password = ""
+
+    # Elegimos caracteres al azar hasta completar la longitud
+    for i in range(length):
+        password += random.choice(characters)
+
+    return password
+
+@bot.event
+async def on_ready():
+    print(f"Hemos iniciado sesión como {bot.user}")
+
+@bot.command()
+async def hello(ctx):
+    await ctx.send("Hola")
+
+@bot.command()
+async def choose(ctx, *choices: str):
+    """Elige entre varias opciones dadas por el usuario."""
+    if not choices or len(choices) < 2:
+        await ctx.send("Necesito al menos dos opciones para elegir.")
+        return
+
+    eleccion = random.choice(choices)
+    await ctx.send(f"{eleccion}")
+
+
+@bot.command()
+async def introduceyourself(ctx):
+    await ctx.send("Por supuesto, Mi nombre es Mr Ant. Tenna, mucho gusto")
+
+@bot.command()
+async def coinflip(ctx):
+    moneda = ["Cara", "Cruz"]
+    resultado = random.choice(moneda)
+    await ctx.send(f"{resultado}")
+
+
+@bot.command()
+async def joke(ctx):
+    chistes = [
+        "¿Por qué Zoro no puede usar Google Maps? Porque aún así se pierde.",
+        "¿Cómo saludan los programadores? ¡Hola, mundo! ¿Y cómo se despiden? return 0.",
+        "¿¿Por qué Ralsei no tiene enemigos? Porque incluso los bugs de su código se sienten mal al atacarlo.",
+        "¿Qué le dice un bit al otro? Nos vemos en el bus.",
+        "¿Eres una función asíncrona? Porque no importa cuánto espere… siempre vales la pena.",
+    ]
+
+    chiste = random.choice(chistes)
+    await ctx.send(f"{chiste}")
+
+
+@bot.command()
+async def password(ctx, length: int):
+    await ctx.send(gen_pass(length))
+
+bot.run("") 
